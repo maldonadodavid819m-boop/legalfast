@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LegalFast | Trámites Legales en Minutos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="logo">⚖️ LegalFast</div>
+</header>
+
+<section class="hero">
+  <h1>Genera trámites legales en minutos</h1>
+  <p>Derechos de petición, reclamos y cartas legales listas para usar en Colombia.</p>
+</section>
+
+<div class="container">
+
+  <div class="card">
+    <h2>🧾 Crear documento</h2>
+
+    <label>Tipo de trámite</label>
+    <select id="tipo">
+      <option>Derecho de petición</option>
+      <option>Reclamo a banco</option>
+      <option>Solicitud a EPS</option>
+      <option>Carta de renuncia</option>
+    </select>
+
+    <label>Nombre</label>
+    <input id="nombre" placeholder="Tu nombre">
+
+    <label>Cédula</label>
+    <input id="cedula" placeholder="Tu cédula">
+
+    <label>Entidad</label>
+    <input id="entidad" placeholder="Ej: Bancolombia">
+
+    <label>Motivo</label>
+    <textarea id="motivo" placeholder="Describe tu caso..."></textarea>
+
+    <button onclick="generar()">Generar documento</button>
+
+    <pre id="resultado"></pre>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
