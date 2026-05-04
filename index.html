@@ -3,25 +3,125 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LegalFast | Trámites Legales en Minutos</title>
-  <link rel="stylesheet" href="style.css">
+  <title>LegalFast | Trámites Legales Automáticos</title>
+
+  <!-- PDF ENGINE -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, Arial;
+      background: #0b1220;
+      color: #e5e7eb;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      background: #111827;
+      font-size: 20px;
+      font-weight: bold;
+      color: #38bdf8;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .hero h1 {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: #9ca3af;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: #111827;
+      padding: 25px;
+      width: 420px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    label {
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      margin: 8px 0 15px;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #1f2937;
+      color: white;
+    }
+
+    textarea {
+      min-height: 100px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #22c55e;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #16a34a;
+    }
+
+    .result {
+      margin-top: 15px;
+      white-space: pre-wrap;
+      background: #0f172a;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .badge {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">⚖️ LegalFast</div>
+  ⚖️ LegalFast
 </header>
 
 <section class="hero">
-  <h1>Genera trámites legales en minutos</h1>
-  <p>Derechos de petición, reclamos y cartas legales listas para usar en Colombia.</p>
+  <h1>Trámites legales automáticos en minutos</h1>
+  <p>Crea derechos de petición, reclamos y documentos legales listos para descargar en PDF.</p>
 </section>
 
 <div class="container">
 
   <div class="card">
-    <h2>🧾 Crear documento</h2>
 
     <label>Tipo de trámite</label>
     <select id="tipo">
@@ -31,25 +131,83 @@
       <option>Carta de renuncia</option>
     </select>
 
-    <label>Nombre</label>
-    <input id="nombre" placeholder="Tu nombre">
+    <label>Nombre completo</label>
+    <input id="nombre" placeholder="Ej: Juan Pérez">
 
     <label>Cédula</label>
-    <input id="cedula" placeholder="Tu cédula">
+    <input id="cedula" placeholder="Ej: 1002345678">
 
     <label>Entidad</label>
     <input id="entidad" placeholder="Ej: Bancolombia">
 
     <label>Motivo</label>
-    <textarea id="motivo" placeholder="Describe tu caso..."></textarea>
+    <textarea id="motivo" placeholder="Describe tu solicitud..."></textarea>
 
-    <button onclick="generar()">Generar documento</button>
+    <button onclick="generarPDF()">📄 Descargar PDF PRO</button>
 
-    <pre id="resultado"></pre>
+    <div class="result" id="resultado"></div>
+
+    <div class="badge">
+      Versión demo gratuita de LegalFast
+    </div>
+
   </div>
 
 </div>
 
-<script src="script.js"></script>
+<script>
+function generarPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const tipo = document.getElementById("tipo").value;
+  const nombre = document.getElementById("nombre").value.trim();
+  const cedula = document.getElementById("cedula").value.trim();
+  const entidad = document.getElementById("entidad").value.trim();
+  const motivo = document.getElementById("motivo").value.trim();
+
+  if (!nombre || !cedula || !entidad || !motivo) {
+    alert("⚠️ Completa todos los campos");
+    return;
+  }
+
+  const fecha = new Date().toLocaleDateString();
+
+  doc.setFont("times", "bold");
+  doc.setFontSize(16);
+  doc.text("DOCUMENTO LEGAL", 105, 20, null, null, "center");
+
+  doc.setFontSize(11);
+  doc.setFont("times", "normal");
+  doc.text(`Tipo: ${tipo}`, 20, 35);
+  doc.text(`Fecha: ${fecha}`, 20, 42);
+
+  doc.setFont("times", "bold");
+  doc.text("Señores:", 20, 55);
+  doc.setFont("times", "normal");
+  doc.text(entidad, 20, 62);
+
+  doc.setFont("times", "bold");
+  doc.text("Yo:", 20, 75);
+  doc.setFont("times", "normal");
+  doc.text(`${nombre} - CC ${cedula}`, 20, 82);
+
+  doc.setFont("times", "bold");
+  doc.text("Solicitud:", 20, 100);
+
+  const text = doc.splitTextToSize(motivo, 170);
+  doc.setFont("times", "normal");
+  doc.text(text, 20, 110);
+
+  doc.text("Atentamente,", 20, 150);
+  doc.text(nombre, 20, 160);
+
+  doc.save(`${tipo}_${nombre}.pdf`);
+
+  document.getElementById("resultado").innerText =
+    "✅ PDF generado correctamente. Revisa tus descargas.";
+}
+</script>
+
 </body>
 </html>
